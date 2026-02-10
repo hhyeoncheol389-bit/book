@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
+            --primary: #f43f5e;
+            --primary-hover: #e11d48;
             --bg: #0f172a;
-            --glass: rgba(255, 255, 255, 0.05);
-            --text: #f8fafc;
-            --text-dim: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.03);
+            --text: #fff1f2;
+            --text-dim: #fda4af;
         }
 
         * {
@@ -32,7 +33,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            background: radial-gradient(circle at top right, #4c0519, #0f172a);
         }
 
         /* Ambient background glow */
@@ -41,70 +42,76 @@
             position: absolute;
             top: -10%;
             left: -10%;
-            width: 40%;
-            height: 40%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.1) 0%, transparent 70%);
             z-index: -1;
         }
 
         .container {
             background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 3rem;
-            border-radius: 2rem;
+            padding: 3.5rem 3rem;
+            border-radius: 2.5rem;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
-            width: 100%;
-            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            max-width: 420px;
+            width: 90%;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .container:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            border: 1px solid rgba(254, 226, 226, 0.2);
+            box-shadow: 0 30px 60px -12px rgba(244, 63, 94, 0.2);
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #818cf8, #c084fc);
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(to right, #fb7185, #f472b6);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         p {
             color: var(--text-dim);
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             font-size: 1.1rem;
+            font-weight: 300;
         }
 
         .counter-display {
-            font-size: 4rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
             color: var(--text);
-            text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+            text-shadow: 0 0 30px rgba(244, 63, 94, 0.4);
+            letter-spacing: -0.05em;
         }
 
         .btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
             color: white;
             border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            border-radius: 1rem;
+            border-radius: 1.2rem;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2), 0 2px 4px -1px rgba(99, 102, 241, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);
         }
 
         .btn:hover {
-            background: var(--primary-hover);
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(244, 63, 94, 0.4);
+            filter: brightness(1.1);
         }
 
         .btn:active {
@@ -113,23 +120,33 @@
 
         /* Micro-animation */
         @keyframes countUp {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+                filter: blur(10px);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: blur(0);
+            }
         }
 
         .animate-pop {
-            animation: countUp 0.2s ease-out;
+            animation: countUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>안녕하세요!</h1>
-        <p>버튼을 눌러 카운트를 올려보세요.</p>
-        
+        <h1>반갑습니다!</h1>
+        <p>오늘 하루도 멋진 코딩 되세요.</p>
+
         <div class="counter-display" id="counter">0</div>
-        
-        <button class="btn" id="incrementBtn">클릭하세요</button>
+
+        <button class="btn" id="incrementBtn">응원하기</button>
     </div>
 
     <script>
@@ -140,7 +157,7 @@
         incrementBtn.addEventListener('click', () => {
             count++;
             counterDisplay.textContent = count;
-            
+
             // Add animation
             counterDisplay.classList.remove('animate-pop');
             void counterDisplay.offsetWidth; // Trigger reflow
@@ -148,4 +165,5 @@
         });
     </script>
 </body>
+
 </html>
