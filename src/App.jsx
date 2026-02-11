@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { db } from './firebase.js';
+import { collection, addDoc, getDocs, query, orderBy, limit } from "firebase/firestore";
 
 const BOSS_TYPES = {
   EASY: { label: '그림자 하수인', hp: 50, color: '#4a4a4a', scale: 0.8, shadow: 'rgba(255,255,255,0.1)' },
@@ -17,16 +19,24 @@ function App() {
   const [logs, setLogs] = useState([]);
   const [isDamaging, setIsDamaging] = useState(false);
   const [effect, setEffect] = useState(null); // 'HIT', 'MISS', 'CRITICAL'
-  const [hallOfFame, setHallOfFame] = useState(() => {
-    const saved = localStorage.getItem('bossHallOfFame');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [hallOfFame, setHallOfFame] = useState([]);
 
+  // Fetch Hall of Fame from Firestore
   useEffect(() => {
-    localStorage.setItem('bossHallOfFame', JSON.stringify(hallOfFame));
-  }, [hallOfFame]);
+    const fetchFame = async () => {
+      try {
+        const q = query(collection(db, "hallOfFame"), orderBy("timestamp", "desc"), limit(10));
+        const querySnapshot = await getDocs(q);
+        const docs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setHallOfFame(docs);
+      } catch (e) {
+        console.error("Error fetching hall of fame: ", e);
+      }
+    };
+    fetchFame();
+  }, [gameState]);
 
-  // NEW: Robust Game Over check using useEffect
+  // Robust Game Over check using useEffect
   useEffect(() => {
     if (player.hp <= 0 && gameState === 'BATTLE') {
       const timer = setTimeout(() => {
@@ -107,12 +117,25 @@ function App() {
     }, 500);
   };
 
-  const recordVictory = () => {
+  const recordVictory = async () => {
     const now = new Date();
     const dateStr = now.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
     const timeStr = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-    const record = { id: Date.now(), goal, difficulty, date: dateStr, time: timeStr };
-    setHallOfFame(prev => [record, ...prev]);
+
+    const record = {
+      goal,
+      difficulty,
+      date: dateStr,
+      time: timeStr,
+      timestamp: Date.now()
+    };
+
+    try {
+      await addDoc(collection(db, "hallOfFame"), record);
+      console.log("Victory recorded in Firebase!");
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   const resetHallOfFame = () => {
