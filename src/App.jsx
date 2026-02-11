@@ -26,6 +26,16 @@ function App() {
     localStorage.setItem('bossHallOfFame', JSON.stringify(hallOfFame));
   }, [hallOfFame]);
 
+  // NEW: Robust Game Over check using useEffect
+  useEffect(() => {
+    if (player.hp <= 0 && gameState === 'BATTLE') {
+      const timer = setTimeout(() => {
+        setGameState('GAMEOVER');
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [player.hp, gameState]);
+
   const addLog = (msg, type = 'default') => {
     setLogs(prev => [{ msg, type }, ...prev].slice(0, 8));
   };
@@ -88,7 +98,8 @@ function App() {
           setGameState('VICTORY');
           setIsDamaging(false);
         } else {
-          bossCounterAttack();
+          // On hit, the boss doesn't counter-attack (rewarding the player)
+          setIsDamaging(false);
         }
       }, 1000);
 
@@ -111,9 +122,10 @@ function App() {
   };
 
   const bossCounterAttack = () => {
-    const counterDamage = Math.floor(Math.random() * (difficulty === 'HARD' ? 25 : 10));
+    const counterDamage = Math.floor(Math.random() * (difficulty === 'HARD' ? 30 : 15));
+    addLog(`보스가 당신의 빈틈을 노려 공격했습니다! 체력 -${counterDamage}`, 'warning');
+
     setPlayer(p => ({ ...p, hp: Math.max(0, p.hp - counterDamage) }));
-    addLog(`보스의 반격! 체력 -${counterDamage}`, 'warning');
     setIsDamaging(false);
   };
 
@@ -179,16 +191,42 @@ function App() {
     );
   }
 
+  if (gameState === 'GAMEOVER') {
+    return (
+      <div className="result-screen failure">
+        <h2 className="failure-text">GAME OVER</h2>
+        <div className="failure-card panel">
+          <img src="https://media.giphy.com/media/26hirEPeB2Pjg6TQc/giphy.gif" alt="GameOver" className="gameover-gif" />
+          <p>보스 [${goal}]의 공격에 쓰러졌습니다...</p>
+          <p>포기하지 마세요. 다시 도전하여 목표를 달성하세요!</p>
+          <button onClick={() => {
+            setPlayer({ hp: 100, maxHp: 100 });
+            setGameState('START');
+          }}>다시 도전하기</button>
+        </div>
+      </div>
+    );
+  }
+
   const currentBoss = BOSS_TYPES[boss.type];
 
   return (
     <div className="game-container">
-      <div className="battle-header">
-        <div className="boss-status">
-          <h2 className="boss-title">{currentBoss.label}: {goal}</h2>
-          <div className="hp-bar-outer boss-bar">
-            <div className="hp-bar-inner" style={{ width: `${(boss.hp / boss.maxHp) * 100}%`, backgroundColor: currentBoss.color }}></div>
-            <span className="hp-label">{boss.hp} / {boss.maxHp}</span>
+      <div className="battle-header panel">
+        <div className="status-grid">
+          <div className="boss-status">
+            <h2 className="boss-title">{currentBoss.label}: {goal}</h2>
+            <div className="hp-bar-outer boss-bar">
+              <div className="hp-bar-inner" style={{ width: `${(boss.hp / boss.maxHp) * 100}%`, backgroundColor: currentBoss.color }}></div>
+              <span className="hp-label">{boss.hp} / {boss.maxHp}</span>
+            </div>
+          </div>
+          <div className="player-status">
+            <h2 className="player-title">나의 에너지 (HP)</h2>
+            <div className="hp-bar-outer player-bar">
+              <div className="hp-bar-inner" style={{ width: `${(player.hp / player.maxHp) * 100}%` }}></div>
+              <span className="hp-label">{player.hp} / {player.maxHp}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -203,7 +241,6 @@ function App() {
         </div>
 
         <div className="player-vessel">
-          <div className="player-hp-mini">MY HP: {player.hp}</div>
           <div className="player-pixel-art"></div>
         </div>
       </div>
