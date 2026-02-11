@@ -1,16 +1,10 @@
-# React + Vite
+# 🌐 헬로 페이지 (Hello Page)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+이 저장소는 프로젝트의 시작과 기초적인 웹 구조를 담고 있는 공간입니다.
 
-Currently, two official plugins are available:
+## 📄 포함 내용
+*   기본 인덱스 페이지 (`index.html`)
+*   웹 기초 실습 기록
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+*참고: 보스 레이드 게임 관련 모든 코드는 [book2 저장소](https://github.com/hhyeoncheol389-bit/book2)로 이전되었습니다.*
